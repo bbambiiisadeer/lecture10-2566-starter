@@ -6,10 +6,32 @@ import { Task } from "@/components/Task";
 import { TaskInput } from "@/components/TaskInput";
 import { nanoid } from "nanoid";
 import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Todolist() {
   //tasks = array of {id: string, title: string, complete: boolean}
   const [tasks, setTasks] = useState([]);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
+  useEffect(() => {
+    if (isFirstLoad) {
+      setIsFirstLoad(false);
+      return;
+    }
+    // console.log("tasks is changed");
+    const strTasks = JSON.stringify(tasks);
+    localStorage.setItem("tasks", strTasks);
+  }, [tasks]);
+
+  useEffect(() => {
+    const strTasks = localStorage.getItem("tasks");
+    if (strTasks === null) {
+      setTasks([]);
+      return;
+    }
+    const loadedTasks = JSON.parse(strTasks);
+    setTasks(loadedTasks);
+  }, []);
 
   const addTask = (newTaskTitle) => {
     const newTask = { id: nanoid(), title: newTaskTitle, completed: false };
@@ -62,7 +84,11 @@ export default function Todolist() {
       </div>
 
       {/* //footer section */}
-      <Footer year="2023" fullName="Chayanin Suatap" studentId="650610560" />
+      <Footer
+        year="2023"
+        fullName="Nunnapat Sirithanachokpaisan"
+        studentId="650610776"
+      />
     </div>
   );
 }

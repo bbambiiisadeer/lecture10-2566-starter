@@ -1,5 +1,7 @@
 "use client";
 
+import {UserCard}
+import { cleanUser } from "@/libs/cleanUser";
 import axios from "axios";
 import { useState } from "react";
 
@@ -10,6 +12,8 @@ export default function RandomUserPage() {
   const generateBtnOnClick = async () => {
     const resp = await axios.get(`https://randomuser.me/api`);
     const user = resp.data.results[0];
+    const cleanedUser = cleanUser(user);
+    setUser(cleanedUser);
   };
 
   return (
@@ -21,6 +25,14 @@ export default function RandomUserPage() {
         </button>
       </div>
       {/* <p className="display-6 text-center fst-italic my-4">Loading ...</p> */}
+      {user && (
+        <UserCard
+          name={user.name}
+          imgUrl={user.imgUrl}
+          address={user.address}
+          email={user.email}
+        />
+      )}
     </div>
   );
 }
